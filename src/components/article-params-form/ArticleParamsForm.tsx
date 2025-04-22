@@ -13,26 +13,26 @@ import {
 	backgroundColors,
 	contentWidthArr,
 	ArticleStateType,
+	defaultArticleState,
 } from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { useOutsideClickClose } from './hooks/useOutsideClickClose';
+import clsx from 'clsx';
 
 type TArticleParamsFormProps = {
 	isOpen: boolean;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	changeStyles: (values: ArticleStateType) => void;
-	resetStyles: () => void;
 	activeParamsMain: ArticleStateType;
+	changeActiveStyles: React.Dispatch<React.SetStateAction<ArticleStateType>>;
 };
 
 export const ArticleParamsForm = ({
 	isOpen,
 	setIsOpen,
-	changeStyles,
-	resetStyles,
 	activeParamsMain,
+	changeActiveStyles,
 }: TArticleParamsFormProps) => {
 	const rootRef = useRef<HTMLDivElement>(null);
 
@@ -49,10 +49,13 @@ export const ArticleParamsForm = ({
 		setIsOpen(!isOpen);
 	};
 
-	const classNames = [styles.container, isOpen ? styles.container_open : ''];
+	const resetStyles = () => {
+		changeActiveStyles(defaultArticleState);
+	};
 
-	const handleApplyButtonClicked = () => {
-		changeStyles(activeParams);
+	const handleFormSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		changeActiveStyles(activeParams);
 	};
 
 	const handleFontFamilyChange = (value: OptionType) => {
@@ -98,8 +101,12 @@ export const ArticleParamsForm = ({
 		<>
 			<ArrowButton isOpen={isOpen} onClick={handleArrowClick} />
 			{isOpen && (
-				<aside className={classNames.join(' ')} ref={rootRef}>
-					<form className={styles.form}>
+				<aside
+					className={clsx(styles.container, {
+						[styles.container_open]: isOpen,
+					})}
+					ref={rootRef}>
+					<form className={styles.form} onSubmit={handleFormSubmit}>
 						<Text as='h2' size={31} weight={800} uppercase dynamicLite>
 							Задайте параметры
 						</Text>
@@ -142,12 +149,7 @@ export const ArticleParamsForm = ({
 								type='clear'
 								onClick={resetStyles}
 							/>
-							<Button
-								title='Применить'
-								htmlType='button'
-								type='apply'
-								onClick={handleApplyButtonClicked}
-							/>
+							<Button title='Применить' htmlType='submit' type='apply' />
 						</div>
 					</form>
 				</aside>

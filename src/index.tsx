@@ -21,16 +21,6 @@ const App = () => {
 	const [activeStyles, setStyles] =
 		useState<ArticleStateType>(defaultArticleState);
 
-	const handleResetStylesClicked = () => {
-		setStyles(defaultArticleState);
-		setIsMenuOpen(false);
-	};
-
-	const handleChangeStylesButtonClicked = (values: ArticleStateType) => {
-		setStyles(values);
-		setIsMenuOpen(false);
-	};
-
 	return (
 		<main
 			className={clsx(styles.main)}
@@ -46,9 +36,8 @@ const App = () => {
 			<ArticleParamsForm
 				isOpen={isMenuOpen}
 				setIsOpen={setIsMenuOpen}
-				changeStyles={handleChangeStylesButtonClicked}
-				resetStyles={handleResetStylesClicked}
 				activeParamsMain={activeStyles}
+				changeActiveStyles={setStyles}
 			/>
 			<Article />
 		</main>
