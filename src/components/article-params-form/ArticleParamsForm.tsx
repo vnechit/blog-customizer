@@ -15,16 +15,29 @@ import {
 } from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
+import { useState } from 'react';
 
 type TArticleParamsFormProps = {
 	isOpen: boolean;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	changeStyles: () => void;
+	resetStyles: () => void;
 };
 
 export const ArticleParamsForm = ({
 	isOpen,
 	setIsOpen,
+	changeStyles,
+	resetStyles,
 }: TArticleParamsFormProps) => {
+	const [activeParams, setActiveParams] = useState({
+		fontFamilyOption: fontFamilyOptions[0],
+		fontColor: fontColors[0],
+		backgroundColor: backgroundColors[0],
+		contentWidth: contentWidthArr[0],
+		fontSizeOption: fontSizeOptions[0],
+	});
+
 	const handleArrowClick = () => {
 		setIsOpen(!isOpen);
 	};
@@ -32,23 +45,38 @@ export const ArticleParamsForm = ({
 	const classNames = [styles.container, isOpen ? styles.container_open : ''];
 
 	const handleFontFamilyChange = (value: OptionType) => {
-		console.log(value);
+		setActiveParams({
+			...activeParams,
+			fontFamilyOption: value,
+		});
 	};
 
 	const handleFontSizeChange = (value: OptionType) => {
-		console.log(value);
+		setActiveParams({
+			...activeParams,
+			fontSizeOption: value,
+		});
 	};
 
 	const handleFontColorChange = (value: OptionType) => {
-		console.log(value);
+		setActiveParams({
+			...activeParams,
+			fontColor: value,
+		});
 	};
 
 	const handleBackgroundColorChange = (value: OptionType) => {
-		console.log(value);
+		setActiveParams({
+			...activeParams,
+			backgroundColor: value,
+		});
 	};
 
 	const handleContentWidthChange = (value: OptionType) => {
-		console.log(value);
+		setActiveParams({
+			...activeParams,
+			contentWidth: value,
+		});
 	};
 
 	return (
@@ -62,38 +90,48 @@ export const ArticleParamsForm = ({
 					<Select
 						title={'Шрифт'}
 						options={fontFamilyOptions}
-						selected={fontFamilyOptions[0]}
+						selected={activeParams.fontFamilyOption}
 						onChange={handleFontFamilyChange}
 					/>
 					<RadioGroup
 						title={'Размер шрифта'}
 						options={fontSizeOptions}
-						selected={fontSizeOptions[0]}
+						selected={activeParams.fontSizeOption}
 						name={'Размер шрифта'}
 						onChange={handleFontSizeChange}
 					/>
 					<Select
 						title={'Цвет шрифта'}
 						options={fontColors}
-						selected={fontColors[0]}
+						selected={activeParams.fontColor}
 						onChange={handleFontColorChange}
 					/>
 					<Separator />
 					<Select
 						title={'Цвет фона'}
 						options={backgroundColors}
-						selected={backgroundColors[0]}
+						selected={activeParams.backgroundColor}
 						onChange={handleBackgroundColorChange}
 					/>
 					<Select
 						title={'Ширина контента'}
 						options={contentWidthArr}
-						selected={contentWidthArr[0]}
+						selected={activeParams.contentWidth}
 						onChange={handleContentWidthChange}
 					/>
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' htmlType='reset' type='clear' />
-						<Button title='Применить' htmlType='submit' type='apply' />
+						<Button
+							title='Сбросить'
+							htmlType='reset'
+							type='clear'
+							onClick={resetStyles}
+						/>
+						<Button
+							title='Применить'
+							htmlType='submit'
+							type='apply'
+							onClick={changeStyles}
+						/>
 					</div>
 				</form>
 			</aside>
