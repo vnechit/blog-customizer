@@ -3,11 +3,25 @@ import { Button } from 'src/ui/button';
 
 import styles from './ArticleParamsForm.module.scss';
 
-export const ArticleParamsForm = () => {
+type TArticleParamsFormProps = {
+	isOpen: boolean;
+	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const ArticleParamsForm = ({
+	isOpen,
+	setIsOpen,
+}: TArticleParamsFormProps) => {
+	const handleArrowClick = () => {
+		setIsOpen(!isOpen);
+	};
+
+	const classNames = [styles.container, isOpen ? styles.container_open : ''];
+
 	return (
 		<>
-			<ArrowButton isOpen={false} onClick={() => {}} />
-			<aside className={styles.container}>
+			<ArrowButton isOpen={isOpen} onClick={handleArrowClick} />
+			<aside className={classNames.join(' ')}>
 				<form className={styles.form}>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' htmlType='reset' type='clear' />

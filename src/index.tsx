@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode, CSSProperties } from 'react';
 import clsx from 'clsx';
+import { useState } from 'react';
 
 import { Article } from './components/article/Article';
 import { ArticleParamsForm } from './components/article-params-form/ArticleParamsForm';
@@ -13,6 +14,8 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+
 	return (
 		<main
 			className={clsx(styles.main)}
@@ -25,7 +28,7 @@ const App = () => {
 					'--bg-color': defaultArticleState.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm />
+			<ArticleParamsForm isOpen={true} setIsOpen={setIsOpen} />
 			<Article />
 		</main>
 	);
