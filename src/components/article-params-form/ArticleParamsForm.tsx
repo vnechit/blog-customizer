@@ -16,7 +16,8 @@ import {
 } from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useOutsideClickClose } from './hooks/useOutsideClickClose';
 
 type TArticleParamsFormProps = {
 	isOpen: boolean;
@@ -33,6 +34,14 @@ export const ArticleParamsForm = ({
 	resetStyles,
 	activeParamsMain,
 }: TArticleParamsFormProps) => {
+	const rootRef = useRef<HTMLDivElement>(null);
+
+	useOutsideClickClose({
+		isOpen,
+		rootRef,
+		onChange: setIsOpen,
+	});
+
 	const [activeParams, setActiveParams] =
 		useState<ArticleStateType>(activeParamsMain);
 
@@ -89,7 +98,7 @@ export const ArticleParamsForm = ({
 		<>
 			<ArrowButton isOpen={isOpen} onClick={handleArrowClick} />
 			{isOpen && (
-				<aside className={classNames.join(' ')}>
+				<aside className={classNames.join(' ')} ref={rootRef}>
 					<form className={styles.form}>
 						<Text as='h2' size={31} weight={800} uppercase dynamicLite>
 							Задайте параметры
