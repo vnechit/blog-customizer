@@ -17,18 +17,18 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 	const [activeStyles, setStyles] =
 		useState<ArticleStateType>(defaultArticleState);
 
 	const handleResetStylesClicked = () => {
 		setStyles(defaultArticleState);
-		setIsOpen(false);
+		setIsMenuOpen(false);
 	};
 
 	const handleChangeStylesButtonClicked = (values: ArticleStateType) => {
 		setStyles(values);
-		setIsOpen(false);
+		setIsMenuOpen(false);
 	};
 
 	return (
@@ -44,8 +44,8 @@ const App = () => {
 				} as CSSProperties
 			}>
 			<ArticleParamsForm
-				isOpen={isOpen}
-				setIsOpen={setIsOpen}
+				isOpen={isMenuOpen}
+				setIsOpen={setIsMenuOpen}
 				changeStyles={handleChangeStylesButtonClicked}
 				resetStyles={handleResetStylesClicked}
 				activeParamsMain={activeStyles}
