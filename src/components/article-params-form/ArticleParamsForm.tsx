@@ -12,16 +12,18 @@ import {
 	fontColors,
 	backgroundColors,
 	contentWidthArr,
+	ArticleStateType,
 } from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type TArticleParamsFormProps = {
 	isOpen: boolean;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	changeStyles: () => void;
+	changeStyles: (values: ArticleStateType) => void;
 	resetStyles: () => void;
+	activeParamsMain: ArticleStateType;
 };
 
 export const ArticleParamsForm = ({
@@ -29,20 +31,20 @@ export const ArticleParamsForm = ({
 	setIsOpen,
 	changeStyles,
 	resetStyles,
+	activeParamsMain,
 }: TArticleParamsFormProps) => {
-	const [activeParams, setActiveParams] = useState({
-		fontFamilyOption: fontFamilyOptions[0],
-		fontColor: fontColors[0],
-		backgroundColor: backgroundColors[0],
-		contentWidth: contentWidthArr[0],
-		fontSizeOption: fontSizeOptions[0],
-	});
+	const [activeParams, setActiveParams] =
+		useState<ArticleStateType>(activeParamsMain);
 
 	const handleArrowClick = () => {
 		setIsOpen(!isOpen);
 	};
 
 	const classNames = [styles.container, isOpen ? styles.container_open : ''];
+
+	const handleApplyButtonClicked = () => {
+		changeStyles(activeParams);
+	};
 
 	const handleFontFamilyChange = (value: OptionType) => {
 		setActiveParams({
@@ -79,62 +81,68 @@ export const ArticleParamsForm = ({
 		});
 	};
 
+	useEffect(() => {
+		setActiveParams(activeParamsMain);
+	}, [activeParamsMain]);
+
 	return (
 		<>
 			<ArrowButton isOpen={isOpen} onClick={handleArrowClick} />
-			<aside className={classNames.join(' ')}>
-				<form className={styles.form}>
-					<Text as='h2' size={31} weight={800} uppercase dynamicLite>
-						Задайте параметры
-					</Text>
-					<Select
-						title={'Шрифт'}
-						options={fontFamilyOptions}
-						selected={activeParams.fontFamilyOption}
-						onChange={handleFontFamilyChange}
-					/>
-					<RadioGroup
-						title={'Размер шрифта'}
-						options={fontSizeOptions}
-						selected={activeParams.fontSizeOption}
-						name={'Размер шрифта'}
-						onChange={handleFontSizeChange}
-					/>
-					<Select
-						title={'Цвет шрифта'}
-						options={fontColors}
-						selected={activeParams.fontColor}
-						onChange={handleFontColorChange}
-					/>
-					<Separator />
-					<Select
-						title={'Цвет фона'}
-						options={backgroundColors}
-						selected={activeParams.backgroundColor}
-						onChange={handleBackgroundColorChange}
-					/>
-					<Select
-						title={'Ширина контента'}
-						options={contentWidthArr}
-						selected={activeParams.contentWidth}
-						onChange={handleContentWidthChange}
-					/>
-					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
-							onClick={resetStyles}
+			{isOpen && (
+				<aside className={classNames.join(' ')}>
+					<form className={styles.form}>
+						<Text as='h2' size={31} weight={800} uppercase dynamicLite>
+							Задайте параметры
+						</Text>
+						<Select
+							title={'Шрифт'}
+							options={fontFamilyOptions}
+							selected={activeParams.fontFamilyOption}
+							onChange={handleFontFamilyChange}
 						/>
-						<Button
-							title='Применить'
-							htmlType='submit'
-							type='apply'
-							onClick={changeStyles}
+						<RadioGroup
+							title={'Размер шрифта'}
+							options={fontSizeOptions}
+							selected={activeParams.fontSizeOption}
+							name={'Размер шрифта'}
+							onChange={handleFontSizeChange}
 						/>
-					</div>
-				</form>
-			</aside>
+						<Select
+							title={'Цвет шрифта'}
+							options={fontColors}
+							selected={activeParams.fontColor}
+							onChange={handleFontColorChange}
+						/>
+						<Separator />
+						<Select
+							title={'Цвет фона'}
+							options={backgroundColors}
+							selected={activeParams.backgroundColor}
+							onChange={handleBackgroundColorChange}
+						/>
+						<Select
+							title={'Ширина контента'}
+							options={contentWidthArr}
+							selected={activeParams.contentWidth}
+							onChange={handleContentWidthChange}
+						/>
+						<div className={styles.bottomContainer}>
+							<Button
+								title='Сбросить'
+								htmlType='reset'
+								type='clear'
+								onClick={resetStyles}
+							/>
+							<Button
+								title='Применить'
+								htmlType='button'
+								type='apply'
+								onClick={handleApplyButtonClicked}
+							/>
+						</div>
+					</form>
+				</aside>
+			)}
 		</>
 	);
 };

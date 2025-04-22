@@ -5,7 +5,10 @@ import { useState } from 'react';
 
 import { Article } from './components/article/Article';
 import { ArticleParamsForm } from './components/article-params-form/ArticleParamsForm';
-import { defaultArticleState } from './constants/articleProps';
+import {
+	defaultArticleState,
+	ArticleStateType,
+} from './constants/articleProps';
 
 import './styles/index.scss';
 import styles from './styles/index.module.scss';
@@ -15,20 +18,38 @@ const root = createRoot(domNode);
 
 const App = () => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [activeStyles, setStyles] =
+		useState<ArticleStateType>(defaultArticleState);
+
+	const handleResetStylesClicked = () => {
+		setStyles(defaultArticleState);
+		setIsOpen(false);
+	};
+
+	const handleChangeStylesButtonClicked = (values: ArticleStateType) => {
+		setStyles(values);
+		setIsOpen(false);
+	};
 
 	return (
 		<main
 			className={clsx(styles.main)}
 			style={
 				{
-					'--font-family': defaultArticleState.fontFamilyOption.value,
-					'--font-size': defaultArticleState.fontSizeOption.value,
-					'--font-color': defaultArticleState.fontColor.value,
-					'--container-width': defaultArticleState.contentWidth.value,
-					'--bg-color': defaultArticleState.backgroundColor.value,
+					'--font-family': activeStyles.fontFamilyOption.value,
+					'--font-size': activeStyles.fontSizeOption.value,
+					'--font-color': activeStyles.fontColor.value,
+					'--container-width': activeStyles.contentWidth.value,
+					'--bg-color': activeStyles.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm isOpen={true} setIsOpen={setIsOpen} />
+			<ArticleParamsForm
+				isOpen={isOpen}
+				setIsOpen={setIsOpen}
+				changeStyles={handleChangeStylesButtonClicked}
+				resetStyles={handleResetStylesClicked}
+				activeParamsMain={activeStyles}
+			/>
 			<Article />
 		</main>
 	);
