@@ -22,31 +22,28 @@ import { useOutsideClickClose } from './hooks/useOutsideClickClose';
 import clsx from 'clsx';
 
 type TArticleParamsFormProps = {
-	isOpen: boolean;
-	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	activeParamsMain: ArticleStateType;
 	changeActiveStyles: React.Dispatch<React.SetStateAction<ArticleStateType>>;
 };
 
 export const ArticleParamsForm = ({
-	isOpen,
-	setIsOpen,
 	activeParamsMain,
 	changeActiveStyles,
 }: TArticleParamsFormProps) => {
 	const rootRef = useRef<HTMLDivElement>(null);
+	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
 	useOutsideClickClose({
-		isOpen,
+		isOpen: isMenuOpen,
 		rootRef,
-		onChange: setIsOpen,
+		onChange: setIsMenuOpen,
 	});
 
 	const [activeParams, setActiveParams] =
 		useState<ArticleStateType>(activeParamsMain);
 
 	const handleArrowClick = () => {
-		setIsOpen(!isOpen);
+		setIsMenuOpen(!isMenuOpen);
 	};
 
 	const resetStyles = () => {
@@ -99,61 +96,59 @@ export const ArticleParamsForm = ({
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={handleArrowClick} />
-			{isOpen && (
-				<aside
-					className={clsx(styles.container, {
-						[styles.container_open]: isOpen,
-					})}
-					ref={rootRef}>
-					<form className={styles.form} onSubmit={handleFormSubmit}>
-						<Text as='h2' size={31} weight={800} uppercase dynamicLite>
-							Задайте параметры
-						</Text>
-						<Select
-							title={'Шрифт'}
-							options={fontFamilyOptions}
-							selected={activeParams.fontFamilyOption}
-							onChange={handleFontFamilyChange}
+			<ArrowButton isOpen={isMenuOpen} onClick={handleArrowClick} />
+			<aside
+				className={clsx(styles.container, {
+					[styles.container_open]: isMenuOpen,
+				})}
+				ref={rootRef}>
+				<form className={styles.form} onSubmit={handleFormSubmit}>
+					<Text as='h2' size={31} weight={800} uppercase dynamicLite>
+						Задайте параметры
+					</Text>
+					<Select
+						title={'Шрифт'}
+						options={fontFamilyOptions}
+						selected={activeParams.fontFamilyOption}
+						onChange={handleFontFamilyChange}
+					/>
+					<RadioGroup
+						title={'Размер шрифта'}
+						options={fontSizeOptions}
+						selected={activeParams.fontSizeOption}
+						name={'Размер шрифта'}
+						onChange={handleFontSizeChange}
+					/>
+					<Select
+						title={'Цвет шрифта'}
+						options={fontColors}
+						selected={activeParams.fontColor}
+						onChange={handleFontColorChange}
+					/>
+					<Separator />
+					<Select
+						title={'Цвет фона'}
+						options={backgroundColors}
+						selected={activeParams.backgroundColor}
+						onChange={handleBackgroundColorChange}
+					/>
+					<Select
+						title={'Ширина контента'}
+						options={contentWidthArr}
+						selected={activeParams.contentWidth}
+						onChange={handleContentWidthChange}
+					/>
+					<div className={styles.bottomContainer}>
+						<Button
+							title='Сбросить'
+							htmlType='reset'
+							type='clear'
+							onClick={resetStyles}
 						/>
-						<RadioGroup
-							title={'Размер шрифта'}
-							options={fontSizeOptions}
-							selected={activeParams.fontSizeOption}
-							name={'Размер шрифта'}
-							onChange={handleFontSizeChange}
-						/>
-						<Select
-							title={'Цвет шрифта'}
-							options={fontColors}
-							selected={activeParams.fontColor}
-							onChange={handleFontColorChange}
-						/>
-						<Separator />
-						<Select
-							title={'Цвет фона'}
-							options={backgroundColors}
-							selected={activeParams.backgroundColor}
-							onChange={handleBackgroundColorChange}
-						/>
-						<Select
-							title={'Ширина контента'}
-							options={contentWidthArr}
-							selected={activeParams.contentWidth}
-							onChange={handleContentWidthChange}
-						/>
-						<div className={styles.bottomContainer}>
-							<Button
-								title='Сбросить'
-								htmlType='reset'
-								type='clear'
-								onClick={resetStyles}
-							/>
-							<Button title='Применить' htmlType='submit' type='apply' />
-						</div>
-					</form>
-				</aside>
-			)}
+						<Button title='Применить' htmlType='submit' type='apply' />
+					</div>
+				</form>
+			</aside>
 		</>
 	);
 };

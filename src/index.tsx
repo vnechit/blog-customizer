@@ -17,7 +17,6 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
-	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 	const [activeStyles, setStyles] =
 		useState<ArticleStateType>(defaultArticleState);
 
@@ -34,8 +33,6 @@ const App = () => {
 				} as CSSProperties
 			}>
 			<ArticleParamsForm
-				isOpen={isMenuOpen}
-				setIsOpen={setIsMenuOpen}
 				activeParamsMain={activeStyles}
 				changeActiveStyles={setStyles}
 			/>
